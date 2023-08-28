@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 import { courseModel } from "../config/models/course.js";
 import multer, { diskStorage } from "multer";
 import { teacherModel } from "../config/models/teacher.js";
+
+
 const adminRouter = Router();
-
-
 const authMiddleware= async (req,res, next) =>{
     console.log("auth middleware ");
     const token = req.headers.token;
@@ -66,7 +66,6 @@ adminRouter.post('/createcourse'  , async (req,res)=>{
             title, 
             body,
             teacher: courseId,
-        
         });
 
         res.status(201).json({newCourse});
