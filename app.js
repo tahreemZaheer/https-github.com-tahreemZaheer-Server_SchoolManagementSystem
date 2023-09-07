@@ -14,7 +14,6 @@ config();
 connectDB();
 
 app.use(bodyParser.json());
-app.use(upload.array());
 app.use(cors());
 app.use('/',mainRouter);
 app.use('/admin',adminRouter);

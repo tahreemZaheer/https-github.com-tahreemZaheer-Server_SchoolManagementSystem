@@ -7,23 +7,18 @@ import { teacherModel } from "../config/models/teacher.js";
 
 const adminRouter = Router();
 const authMiddleware= async (req,res, next) =>{
-    console.log("auth middleware ");
+    console.log("auth middleware");
     const token = req.headers.token;
-
     if(!token) {
         res.status(401).json({message: "Unauthorized"});
     }
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);        
         const teacher = await teacherModel.findById({_id:decoded.teacherId });
-
         if(!teacher) {
             res.status(401).json({message: "Unauthorized"});
             res.send();
         }
-
         next();
     }
     catch(err) {
@@ -58,14 +53,14 @@ let upload=  multer({
     }
 })
 
-adminRouter.post('/createcourse'  , async (req,res)=>{
+adminRouter.post('/createcourse', async (req,res)=>{
     try {
         console.log(req.body);
-        const {title, body, courseId} = req.body;
+        const {title, body, teacherId} = req.body;
         const newCourse = await courseModel.create({
             title, 
             body,
-            teacher: courseId,
+            teacher: teacherId,
         });
 
         res.status(201).json({newCourse});
@@ -75,4 +70,19 @@ adminRouter.post('/createcourse'  , async (req,res)=>{
     }
 });
 
+adminRouter.get('/instructor',async(req,res)=>{
+    try{
+        const data = await teacherModel.find();
+
+        if(data){
+            res.json(data);
+        }
+        else{
+            res.json({message:"no Instructor available"});
+        }
+        res.end();
+    }catch(e){
+        console.error(e);
+    }
+});
 export default adminRouter;
